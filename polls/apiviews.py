@@ -119,3 +119,10 @@ class ChoiceUpdate(generics.RetrieveUpdateAPIView):
             choice = serializer.save()
             return Response(ChoiceSerializer(choice).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChoiceDelete(generics.DestroyAPIView):
+
+    def delete(self, request, choice_id, **kwargs):
+        choice = get_object_or_404(Choice, pk=choice_id)
+        choice.delete()
+        return Response("Choice deleted", status=status.HTTP_204_NO_CONTENT)

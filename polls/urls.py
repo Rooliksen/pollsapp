@@ -13,5 +13,6 @@ urlpatterns = [
     path('poll/view/', PollView.as_view(), name='polls_view'),
     # Обновление определенного опроса
     path('poll/update/<int:poll_id>/', PollUpdate.as_view(), name='poll_update'),
+    # Отображение всех активных опросов
     path('poll/view/active/', PollView.as_view(), name='active_poll_view'),
 ]

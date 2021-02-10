@@ -62,3 +62,10 @@ class PollUpdate(generics.RetrieveUpdateAPIView):
         elif request.method == 'DELETE':
             poll.delete()
             return Response("Poll deleted", status=status.HTTP_204_NO_CONTENT)
+
+class PollActiveView(generics.ListAPIView):
+    serializer_class = PollSerializer
+
+    def get_queryset(self):
+        active_polls = Poll.objects.filter(end_date__gte=timezone.now()).filter(pub_date__lte=timezone.now())
+        return active_polls

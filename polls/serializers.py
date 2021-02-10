@@ -107,13 +107,6 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = '__all__'
 
-    def update(self, instance, validated_data):
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
-        instance.save()
-        return instance
-
-
 class PollSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     poll_name = serializers.CharField(max_length=200)

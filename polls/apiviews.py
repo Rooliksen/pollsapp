@@ -30,6 +30,13 @@ class LoginView(APIView):
         else:
             return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
+class PollView(generics.ListAPIView):
+    serializer_class = PollSerializer
+
+    def get_queryset(self):
+        queryset = Poll.objects.all()
+        return queryset
+
 class PollCreate(generics.CreateAPIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.AllowAny]
@@ -41,26 +48,22 @@ class PollCreate(generics.CreateAPIView):
             return Response(PollSerializer(poll).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class PollView(generics.ListAPIView):
-    serializer_class = PollSerializer
-
-    def get_queryset(self):
-        queryset = Poll.objects.all()
-        return queryset
-
 class PollUpdate(generics.RetrieveUpdateAPIView):
 
     def update(self, request, poll_id, **kwargs):
         poll = get_object_or_404(Poll, pk=poll_id)
-        if request.method == 'PATCH':
-            serializer = PollSerializer(poll, data=request.data, partial=True)
-            if serializer.is_valid():
-                poll = serializer.save()
-                return Response(PollSerializer(poll).data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        elif request.method == 'DELETE':
-            poll.delete()
-            return Response("Poll deleted", status=status.HTTP_204_NO_CONTENT)
+        serializer = PollSerializer(poll, data=request.data, partial=True)
+        if serializer.is_valid():
+            poll = serializer.save()
+            return Response(PollSerializer(poll).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PollDelete(generics.DestroyAPIView):
+
+    def delete(self, request, poll_id, **kwargs):
+        poll = get_object_or_404(Poll, pk=poll_id)
+        poll.delete()
+        return Response("Poll deleted", status=status.HTTP_204_NO_CONTENT)
 
 class PollActiveView(generics.ListAPIView):
     serializer_class = PollSerializer
@@ -79,3 +82,20 @@ class QuestionCreate(generics.CreateAPIView):
             question = serializer.save()
             return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class QuestionUpdate(generics.RetrieveUpdateAPIView):
+
+    def update(self, request, question_id, **kwargs):
+        question = get_object_or_404(Question, pk=question_id)
+        serializer = QuestionSerializer(question, data=request.data, partial=True)
+        if serializer.is_valid():
+            question = serializer.save()
+            return Response(QuestionSerializer(question).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class QuestionDelete(generics.DestroyAPIView):
+
+    def delete(self, request, question_id, **kwargs):
+        question = get_object_or_404(Question, pk=question_id)
+        question.delete()
+        return Response("Question deleted", status=status.HTTP_204_NO_CONTENT)

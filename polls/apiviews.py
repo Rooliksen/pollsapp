@@ -68,3 +68,14 @@ class PollActiveView(generics.ListAPIView):
     def get_queryset(self):
         active_polls = Poll.objects.filter(end_date__gte=timezone.now()).filter(pub_date__lte=timezone.now())
         return active_polls
+
+class QuestionCreate(generics.CreateAPIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = QuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            question = serializer.save()
+            return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

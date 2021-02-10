@@ -128,14 +128,3 @@ class PollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Poll
         fields = '__all__'
-
-    def create(self, validated_data):
-        return Poll.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        if 'pub_date' in validated_data:
-            raise serializers.ValidationError({'pub_date': 'You must not change this field.'})
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
-        instance.save()
-        return instance

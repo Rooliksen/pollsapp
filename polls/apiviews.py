@@ -109,3 +109,13 @@ class ChoiceCreate(generics.CreateAPIView):
             choice = serializer.save()
             return Response(ChoiceSerializer(choice).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChoiceUpdate(generics.RetrieveUpdateAPIView):
+
+    def update(self, request, choice_id, **kwargs):
+        choice = get_object_or_404(Choice, pk=choice_id)
+        serializer = ChoiceSerializer(choice, data=request.data, partial=True)
+        if serializer.is_valid():
+            choice = serializer.save()
+            return Response(ChoiceSerializer(choice).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

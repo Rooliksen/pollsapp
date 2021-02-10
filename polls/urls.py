@@ -9,7 +9,7 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     # Создание опроса
     path('poll/create/', PollCreate.as_view(), name='poll_create'),
-    # Обновление конкретного опроса
+    # Редактирование конкретного опроса
     path('poll/update/<int:poll_id>/', PollUpdate.as_view(), name='poll_update'),
     # Удаление конкретного опроса
     path('poll/delete/<int:poll_id>/', PollDelete.as_view(), name='poll_delete'),
@@ -19,12 +19,12 @@ urlpatterns = [
     path('poll/view/active/', PollActiveView.as_view(), name='active_poll_view'),
     # Создание вопроса
     path('question/create/', QuestionCreate.as_view(), name='question_create'),
-    # Обновление конкретного вопроса
+    # Редактирование конкретного вопроса
     path('question/update/<int:question_id>/', QuestionUpdate.as_view(), name='question_update'),
     # Удаление конкретного вопроса
     path('question/delete/<int:question_id>/', QuestionDelete.as_view(), name='poll_delete'),
     # Создание варианта ответа
     path('choice/create/', ChoiceCreate.as_view(), name='choice_create'),
-
-    path('choice/update/<int:choice_id>/', ChoiceCreate.as_view(), name='choice_update'),
+    # Редактирование конкретного варианта ответа
+    path('choice/update/<int:choice_id>/', ChoiceUpdate.as_view(), name='choice_update'),
 ]

@@ -90,7 +90,7 @@ class ChoiceSerializer(serializers.Serializer):
         return instance
 
 
-class QuestionSerializer(serializers.Serializer):
+class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
     question_text = serializers.CharField(max_length=200)
@@ -106,9 +106,6 @@ class QuestionSerializer(serializers.Serializer):
     class Meta:
         model = Question
         fields = '__all__'
-
-    def create(self, validated_data):
-        return Question.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         for key, value in validated_data.items():

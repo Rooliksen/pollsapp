@@ -74,7 +74,7 @@ class QuestionCreate(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = QuestionSerializer(data=request.data)
+        serializer = QuestionSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             question = serializer.save()
             return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)

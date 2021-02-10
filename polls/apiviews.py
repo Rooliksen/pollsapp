@@ -1,15 +1,14 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
-
-from .serializers import PollSerializer, QuestionSerializer, ChoiceSerializer, AnswerSerializer
 from .models import *
-from  .serializers import *
+from .serializers import *
 
 from rest_framework import status
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK

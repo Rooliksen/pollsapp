@@ -63,7 +63,7 @@ class AnswerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Already responded')
 
 
-class ChoiceSerializer(serializers.Serializer):
+class ChoiceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
     choice_text = serializers.CharField(max_length=200)
@@ -79,9 +79,6 @@ class ChoiceSerializer(serializers.Serializer):
     class Meta:
         model = Choice
         fields = '__all__'
-
-    def create(self, validated_data):
-        return Choice.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         for key, value in validated_data.items():

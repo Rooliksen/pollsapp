@@ -23,4 +23,8 @@ urlpatterns = [
     path('question/update/<int:question_id>/', QuestionUpdate.as_view(), name='question_update'),
     # Удаление конкретного вопроса
     path('question/delete/<int:question_id>/', QuestionDelete.as_view(), name='poll_delete'),
+    # Создание варианта ответа
+    path('choice/create/', ChoiceCreate.as_view(), name='choice_create'),
+
+    path('choice/update/<int:choice_id>/', ChoiceCreate.as_view(), name='choice_update'),
 ]

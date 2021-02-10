@@ -99,3 +99,13 @@ class QuestionDelete(generics.DestroyAPIView):
         question = get_object_or_404(Question, pk=question_id)
         question.delete()
         return Response("Question deleted", status=status.HTTP_204_NO_CONTENT)
+
+class ChoiceCreate(generics.CreateAPIView):
+    serializer_class = ChoiceSerializer
+
+    def post(self, request):
+        serializer = ChoiceSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            choice = serializer.save()
+            return Response(ChoiceSerializer(choice).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

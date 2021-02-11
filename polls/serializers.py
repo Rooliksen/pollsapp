@@ -49,20 +49,6 @@ class AnswerSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def validate(self, attrs):
-        question_type = Question.objects.get(id=attrs['question'].id).question_type
-        try:
-            if question_type == "one" or question_type == "text":
-                obj = Answer.objects.get(question=attrs['question'].id, poll=attrs['poll'], user_id=attrs['user_id'])
-            elif question_type == "multiple":
-                obj = Answer.objects.get(question=attrs['question'].id, poll=attrs['poll'], user_id=attrs['user_id'],
-                                         choice=attrs['choice'])
-        except Answer.DoesNotExist:
-            return attrs
-        else:
-            raise serializers.ValidationError('Already responded')
-
-
 class ChoiceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')

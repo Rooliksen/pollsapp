@@ -29,4 +29,5 @@ urlpatterns = [
     path('choice/update/<int:choice_id>/', ChoiceUpdate.as_view(), name='choice_update'),
     # Удаление конкретного варианта ответа
     path('choice/delete/<int:choice_id>/', ChoiceDelete.as_view(), name='choice_delete'),
+    path('answer/create/', AnswerCreate.as_view(), name='answer_create'),
 ]

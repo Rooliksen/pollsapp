@@ -31,7 +31,7 @@ class Answer(models.Model):
     user_id = models.IntegerField(null=True)
     poll = models.ForeignKey(Poll, related_name='poll', on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name='question', on_delete=models.CASCADE)
-    choice = models.ForeignKey(Choice, related_name='choice', on_delete=models.CASCADE, null=True)
+    choice = models.CharField(max_length=200, null=True)
     choice_text = models.CharField(max_length=200, null=True)
 
     def __str__(self):

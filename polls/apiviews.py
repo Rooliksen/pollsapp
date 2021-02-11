@@ -129,7 +129,7 @@ class ChoiceDelete(generics.DestroyAPIView):
 
 class AnswerCreate(generics.CreateAPIView):
 
-    def create(self, request):
+    def post(self, request):
         serializer = AnswerSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             answer = serializer.save()

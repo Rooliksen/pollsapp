@@ -28,7 +28,7 @@ class CurrentUserDefault(object):
         return self.user_id
 
 
-class AnswerSerializer(serializers.ModelSerializer):
+""" class AnswerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     user_id = serializers.IntegerField(default=CurrentUserDefault())
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
@@ -47,7 +47,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()
-        return instance
+        return instance """
 
 class ChoiceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -66,6 +66,17 @@ class ChoiceSerializer(serializers.ModelSerializer):
         model = Choice
         fields = '__all__'
 
+class AnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    user_id = serializers.IntegerField(default=CurrentUserDefault())
+    poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
+    question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
+    choice_text = serializers.CharField(max_length=200, allow_null=True, required=False)
+    choice = serializers.ListField(child=serializers.CharField())
+
+    class Meta:
+        model = Answer
+        fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

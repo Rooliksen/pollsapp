@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Poll, Question, Choice, Answer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from rest_framework.exceptions import APIException
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -54,7 +55,10 @@ class QuestionSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True, read_only=True)
 
     def validate(self, attrs):
-        question_type = attrs['question_type']
+        try:
+            question_type = attrs['question_type']
+        except KeyError:
+            raise APIException('question_type field is required.')
         if question_type == 'one' or question_type == 'many' or question_type=='text':
             return attrs
         raise serializers.ValidationError('Question type can be only one, many or text')

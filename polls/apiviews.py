@@ -53,10 +53,10 @@ class PollUpdate(generics.RetrieveUpdateAPIView):
 
     def update(self, request, poll_id, **kwargs):
         poll = get_object_or_404(Poll, pk=poll_id)
-        serializer = PollSerializer(poll, data=request.data, partial=True)
+        serializer = PollUpdateSerializer(poll, data=request.data, partial=True)
         if serializer.is_valid():
             poll = serializer.save()
-            return Response(PollSerializer(poll).data)
+            return Response(PollUpdateSerializer(poll).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PollDelete(generics.DestroyAPIView):

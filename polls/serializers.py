@@ -41,14 +41,14 @@ class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
     question_text = serializers.CharField(max_length=200)
-    question_type = serializers.CharField(max_length=200)
+    question_type = serializers.CharField(max_length=200, required=True)
     choices = ChoiceSerializer(many=True, read_only=True)
 
     def validate(self, attrs):
         question_type = attrs['question_type']
         if question_type == 'one' or question_type == 'many' or question_type=='text':
             return attrs
-        raise serializers.ValidationError('Question type can be only one, multiple, text')
+        raise serializers.ValidationError('Question type can be only one, many or text')
 
     class Meta:
         model = Question
@@ -58,6 +58,18 @@ class PollSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     poll_name = serializers.CharField(max_length=200)
     pub_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+    poll_description = serializers.CharField(max_length=200)
+    questions = QuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Poll
+        fields = '__all__'
+
+class PollUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    poll_name = serializers.CharField(max_length=200)
+    pub_date = serializers.DateTimeField(read_only=True)
     end_date = serializers.DateTimeField()
     poll_description = serializers.CharField(max_length=200)
     questions = QuestionSerializer(many=True, read_only=True)

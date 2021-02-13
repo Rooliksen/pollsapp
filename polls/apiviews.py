@@ -38,8 +38,7 @@ class PollView(generics.ListAPIView):
         return queryset
 
 class PollCreate(generics.CreateAPIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
 
     def post(self, request):
         serializer = PollSerializer(data=request.data, context={'request': request})
@@ -49,6 +48,7 @@ class PollCreate(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PollUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
     def update(self, request, poll_id, **kwargs):
         poll = get_object_or_404(Poll, pk=poll_id)
@@ -59,6 +59,7 @@ class PollUpdate(generics.RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PollDelete(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
     def delete(self, request, poll_id, **kwargs):
         poll = get_object_or_404(Poll, pk=poll_id)
@@ -73,8 +74,7 @@ class PollActiveView(generics.ListAPIView):
         return active_polls
 
 class QuestionCreate(generics.CreateAPIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
 
     def post(self, request):
         serializer = QuestionSerializer(data=request.data, context={'request': request})
@@ -84,6 +84,7 @@ class QuestionCreate(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class QuestionUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
     def update(self, request, question_id, **kwargs):
         question = get_object_or_404(Question, pk=question_id)
@@ -94,6 +95,7 @@ class QuestionUpdate(generics.RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class QuestionDelete(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
     def delete(self, request, question_id, **kwargs):
         question = get_object_or_404(Question, pk=question_id)
@@ -101,6 +103,7 @@ class QuestionDelete(generics.DestroyAPIView):
         return Response("Question deleted", status=status.HTTP_204_NO_CONTENT)
 
 class ChoiceCreate(generics.CreateAPIView):
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = ChoiceSerializer
 
     def post(self, request):
@@ -111,6 +114,7 @@ class ChoiceCreate(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChoiceUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
     def update(self, request, choice_id, **kwargs):
         choice = get_object_or_404(Choice, pk=choice_id)
@@ -121,6 +125,7 @@ class ChoiceUpdate(generics.RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChoiceDelete(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
     def delete(self, request, choice_id, **kwargs):
         choice = get_object_or_404(Choice, pk=choice_id)

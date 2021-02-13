@@ -66,12 +66,25 @@ class PollSerializer(serializers.ModelSerializer):
         model = Poll
         fields = '__all__'
 
-class OneChoiceAnswerSerializer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
     question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
     choice_one = serializers.SlugRelatedField(queryset=Choice.objects.all(), slug_field='id')
+    choice_many = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), many=True, allow_null=True)
+    choice_text = serializers.CharField(max_length=200, allow_null=True)
+
+    class Meta:
+        model = Answer
+        fields = '__all__'
+
+class OneChoiceAnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
+    question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
+    choice_one = serializers.SlugRelatedField(queryset=Choice.objects.all(), slug_field='id', required=True)
 
     class Meta:
         model = Answer
@@ -82,7 +95,7 @@ class ManyChoiceAnswerSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
     question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
-    choice_many = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), many=True, allow_null=True)
+    choice_many = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), many=True, allow_null=True, required=True)
 
     class Meta:
         model = Answer

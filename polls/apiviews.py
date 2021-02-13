@@ -174,3 +174,19 @@ class AnswerCreate(generics.CreateAPIView):
                 answer = serializer.save()
                 return Response(TextChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AnswerView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        queryset = Answer.objects.all()
+        return queryset
+
+class AnswerViewById(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, user_id):
+        answers = Answer.objects.filter(user_id=user_id)
+        serializer = AnswerSerializer(answers, many=True)
+        return Response(serializer.data)

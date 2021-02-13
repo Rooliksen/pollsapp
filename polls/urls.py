@@ -32,4 +32,8 @@ urlpatterns = [
     # Создание ответа на вопрос. Если пользователь авторизован, то сохраняется ID пользователя.
     # Если пользователь неавторизован, то полю ID задается значение None
     path('answer/create/', AnswerCreate.as_view(), name='answer_create'),
+    # Просмотр всех ответов
+    path('answer/view/', AnswerView.as_view(), name='answer_view'),
+    # Просмотр ответов конкретного пользователя
+    path('answer/view/<int:user_id>/', AnswerViewById.as_view(), name='answer_view'),
 ]

@@ -128,10 +128,16 @@ class ChoiceDelete(generics.DestroyAPIView):
         return Response("Choice deleted", status=status.HTTP_204_NO_CONTENT)
 
 class AnswerCreate(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = AnswerSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
+        if request.user.is_anonymous is True and serializer.is_valid():
+            user = None
+            answer = serializer.save()
+            return Response(AnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+        elif serializer.is_valid():
+            answer = serializer.save(user=self.request.user)
             answer = serializer.save()
             return Response(AnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class Poll(models.Model):
     poll_name = models.CharField(max_length=200)
@@ -28,10 +31,10 @@ class Choice(models.Model):
 
 
 class Answer(models.Model):
-    user_id = models.IntegerField(null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, related_name='poll', on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name='question', on_delete=models.CASCADE)
-    choice = models.CharField(max_length=200, null=True)
+    choice = models.ManyToManyField(Choice)
     choice_text = models.CharField(max_length=200, null=True)
 
     def __str__(self):

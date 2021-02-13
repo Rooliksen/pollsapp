@@ -29,5 +29,7 @@ urlpatterns = [
     path('choice/update/<int:choice_id>/', ChoiceUpdate.as_view(), name='choice_update'),
     # Удаление конкретного варианта ответа
     path('choice/delete/<int:choice_id>/', ChoiceDelete.as_view(), name='choice_delete'),
+    # Создание ответа на вопрос. Если пользователь авторизован, то сохраняется ID пользователя.
+    # Если пользователь неавторизован, то полю ID задается значение None
     path('answer/create/', AnswerCreate.as_view(), name='answer_create'),
 ]

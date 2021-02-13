@@ -46,7 +46,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         question_type = attrs['question_type']
-        if question_type == 'one' or question_type == 'multiple' or question_type=='text':
+        if question_type == 'one' or question_type == 'many' or question_type=='text':
             return attrs
         raise serializers.ValidationError('Question type can be only one, multiple, text')
 
@@ -66,17 +66,36 @@ class PollSerializer(serializers.ModelSerializer):
         model = Poll
         fields = '__all__'
 
-class AnswerSerializer(serializers.ModelSerializer):
+class OneChoiceAnswerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
     question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
-    choice_text = serializers.CharField(max_length=200, allow_null=True, required=False)
-    choice = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), many=True)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    choice_one = serializers.SlugRelatedField(queryset=Choice.objects.all(), slug_field='id')
 
     class Meta:
         model = Answer
-        fields = '__all__'
+        fields = ['id', 'user', 'poll', 'question', 'choice_one']
+
+class ManyChoiceAnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
+    question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
+    choice_many = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), many=True, allow_null=True)
+
+    class Meta:
+        model = Answer
+        fields = ['id', 'user', 'poll', 'question', 'choice_many']
+    
+class TextChoiceAnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')
+    question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id')
+    choice_text = serializers.CharField(max_length=200, allow_null=True, required=True)
+
+    class Meta:
+        model = Answer
+        fields = ['id', 'user', 'poll', 'question', 'choice_text']
+

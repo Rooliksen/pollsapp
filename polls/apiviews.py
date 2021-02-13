@@ -31,6 +31,7 @@ class LoginView(APIView):
             return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 class PollView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
     serializer_class = PollSerializer
 
     def get_queryset(self):
@@ -67,6 +68,7 @@ class PollDelete(generics.DestroyAPIView):
         return Response("Poll deleted", status=status.HTTP_204_NO_CONTENT)
 
 class PollActiveView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
     serializer_class = PollSerializer
 
     def get_queryset(self):
@@ -136,13 +138,39 @@ class AnswerCreate(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = AnswerSerializer(data=request.data, context={'request': request})
-        if request.user.is_anonymous is True and serializer.is_valid():
-            user = None
-            answer = serializer.save()
-            return Response(AnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
-        elif serializer.is_valid():
-            answer = serializer.save(user=self.request.user)
-            answer = serializer.save()
-            return Response(AnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        question = get_object_or_404(Question, pk=request.data['question'])
+        if question.question_type == 'one':
+            serializer = OneChoiceAnswerSerializer(data=request.data, context={'request': request})
+            if request.user.is_anonymous is True and serializer.is_valid():
+                user = None
+                answer = serializer.save()
+                return Response(OneChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+            elif serializer.is_valid():
+                answer = serializer.save(user=self.request.user)
+                answer = serializer.save()
+                return Response(OneChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        elif question.question_type == 'many':
+            serializer = ManyChoiceAnswerSerializer(data=request.data, context={'request': request})
+            if request.user.is_anonymous is True and serializer.is_valid():
+                user = None
+                answer = serializer.save()
+                return Response(ManyChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+            elif serializer.is_valid():
+                answer = serializer.save(user=self.request.user)
+                answer = serializer.save()
+                return Response(ManyChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            serializer = TextChoiceAnswerSerializer(data=request.data, context={'request': request})
+            if request.user.is_anonymous is True and serializer.is_valid():
+                user = None
+                answer = serializer.save()
+                return Response(TextChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+            elif serializer.is_valid():
+                answer = serializer.save(user=self.request.user)
+                answer = serializer.save()
+                return Response(TextChoiceAnswerSerializer(answer).data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

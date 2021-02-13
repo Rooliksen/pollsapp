@@ -12,6 +12,7 @@ from .serializers import *
 
 from rest_framework import status
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
+from rest_framework.exceptions import APIException
 
 class UserCreate(generics.CreateAPIView):
     authentication_classes = ()
@@ -138,7 +139,11 @@ class AnswerCreate(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        question = get_object_or_404(Question, pk=request.data['question'])
+        try:
+            question = get_object_or_404(Question, pk=request.data['question'])
+        except KeyError:
+            raise APIException('question field is required.')
+
         if question.question_type == 'one':
             serializer = OneChoiceAnswerSerializer(data=request.data, context={'request': request})
             if request.user.is_anonymous is True and serializer.is_valid():

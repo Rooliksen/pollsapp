@@ -37,6 +37,15 @@ class ChoiceSerializer(serializers.ModelSerializer):
         model = Choice
         fields = '__all__'
 
+class ChoiceUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    question = serializers.SlugRelatedField(queryset=Question.objects.all(), slug_field='id', required=True)
+    choice_text = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = Choice
+        fields = '__all__'
+
 class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     poll = serializers.SlugRelatedField(queryset=Poll.objects.all(), slug_field='id')

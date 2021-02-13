@@ -120,10 +120,10 @@ class ChoiceUpdate(generics.RetrieveUpdateAPIView):
 
     def update(self, request, choice_id, **kwargs):
         choice = get_object_or_404(Choice, pk=choice_id)
-        serializer = ChoiceSerializer(choice, data=request.data, partial=True)
+        serializer = ChoiceUpdateSerializer(choice, data=request.data, partial=True)
         if serializer.is_valid():
             choice = serializer.save()
-            return Response(ChoiceSerializer(choice).data)
+            return Response(ChoiceUpdateSerializer(choice).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChoiceDelete(generics.DestroyAPIView):
